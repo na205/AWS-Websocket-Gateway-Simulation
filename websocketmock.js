@@ -17,7 +17,6 @@ const defaultActions = {
   connect: (connection,request) => {
 
     const id = short.generate();
-    //const id = "gendummy";
     connection.connectionId = id
     try {
       var postData = JSON.stringify({ "connectionId":id,
@@ -45,10 +44,8 @@ const defaultActions = {
           console.error(e);
         });
 
-
       req.write(postData);
       req.end();
-      console.log("i sent a post");
   } catch (ex) {
     console.error(ex);
     connection.send(`Bad Request format, use: '{"action": ..., "data": ...}'`);
@@ -90,7 +87,6 @@ const defaultActions = {
             console.error(e);
           });
 
-
         req.write(postData);
         req.end();
     //customActions.default ? customActions.default(connectionId) : send(connectionId, message);
@@ -113,10 +109,6 @@ wss.on('connection', (socket,request) => {
     defaultActions.default(socket.connectionId, messageJson);
 
   });
-  // setInterval(() => {
-  //   // console.log("ping dest socket");
-  //   socket.ping();
-  // }, 5000);
   socket.on('close', () => {
     defaultActions.disconnect(socket.connectionId);
   });
@@ -139,11 +131,6 @@ app.route('/@connections/:id')
       data+=chunk;
     });
     req.on('end', function() {
-      console.log("data is ",data);
-      var payload = {
-        connectionId:socketTemp.connectionId,
-        body:data
-      };
       socketTemp.send(data);
     });
     
